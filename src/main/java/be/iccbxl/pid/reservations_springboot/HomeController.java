@@ -1,9 +1,10 @@
 package be.iccbxl.pid.reservations_springboot;
 
-import org.springframework.web.bind.annotation.RestController;
+// import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.stereotype.Controller;
 
-@RestController
+@Controller
 public class HomeController {
 
     @RequestMapping("/")

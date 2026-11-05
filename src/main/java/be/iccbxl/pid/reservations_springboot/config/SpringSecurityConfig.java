@@ -2,7 +2,6 @@ package be.iccbxl.pid.reservations_springboot.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,13 +22,23 @@ public class SpringSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/login", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("MEMBER")
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults())
-                .rememberMe(Customizer.withDefaults())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .usernameParameter("login")
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/login?loginError=true")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")
+                        .permitAll()
+                )
+                .rememberMe(remember -> remember.key("une-cle-fixe-pour-le-dev"))
                 .build();
     }
 }
