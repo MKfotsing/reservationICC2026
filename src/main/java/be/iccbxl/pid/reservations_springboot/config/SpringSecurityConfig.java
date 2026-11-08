@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -22,7 +23,7 @@ public class SpringSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/login", "/error", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("MEMBER")
                         .anyRequest().authenticated()
@@ -34,10 +35,12 @@ public class SpringSecurityConfig {
                         .failureUrl("/login?loginError=true")
                         .permitAll()
                 )
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/")
-                        .permitAll()
-                )
+                .logout((logout) -> logout
+                    .logoutSuccessUrl("/login?logoutSuccess=true")
+                    .permitAll())
+                .exceptionHandling(exception -> exception
+                    .authenticationEntryPoint(
+                        new LoginUrlAuthenticationEntryPoint("/login?loginRequired=true")))
                 .rememberMe(remember -> remember.key("une-cle-fixe-pour-le-dev"))
                 .build();
     }
