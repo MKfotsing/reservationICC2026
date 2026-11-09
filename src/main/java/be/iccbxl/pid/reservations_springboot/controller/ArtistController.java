@@ -49,7 +49,7 @@ public class ArtistController {
         return "artist/show";
     }
 	
-	@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/artists/{id}/edit")
 	public String edit(Model model, @PathVariable long id, HttpServletRequest request) {
 		Artist artist = service.getArtist(id);
@@ -68,7 +68,7 @@ public class ArtistController {
 		return "artist/edit";
 	}
 	
-	@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/artists/{id}/edit")
 		public String update(@Valid @ModelAttribute Artist artist, BindingResult bindingResult,
 		@PathVariable long id, Model model, RedirectAttributes redirAttrs) 
@@ -89,14 +89,9 @@ public class ArtistController {
     
 		return "redirect:/artists/"+artist.getId();
 	}
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/artists/create")
-	public String create(Model model, HttpServletRequest request, RedirectAttributes redirAttrs) {
-	    // Mauvaise approche (volontaire) : le rôle est testé à la main dans chaque méthode
-	    if (!request.isUserInRole("ADMIN")) {
-	        redirAttrs.addFlashAttribute("errorMessage", "Vous n'avez pas le droit de créer un artiste.");
-	        return "redirect:/";
-	    }
-
+	public String create(Model model) {
 	    if (!model.containsAttribute("artist")) {
 	        model.addAttribute("artist", new Artist());
     }
@@ -105,14 +100,10 @@ public class ArtistController {
 	}
 
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/artists/create")
-	public String store(@Valid @ModelAttribute Artist artist, BindingResult bindingResult, HttpServletRequest request, 
+	public String store(@Valid @ModelAttribute Artist artist, BindingResult bindingResult, 
 		Model model, RedirectAttributes redirAttrs) {
-
-	    if (!request.isUserInRole("ADMIN")) {
-	        redirAttrs.addFlashAttribute("errorMessage", "Vous n'avez pas le droit de créer un artiste.");
-	        return "redirect:/";
-	    }
 
 	    
 	    if (bindingResult.hasErrors()) {
@@ -125,6 +116,7 @@ public class ArtistController {
 	    
 	    return "redirect:/artists/"+artist.getId();
 	}
+		@PreAuthorize("hasRole('ADMIN')")
 		@DeleteMapping("/artists/{id}")
 	public String delete(@PathVariable long id, Model model, RedirectAttributes redirAttrs) {
 	    Artist existing = service.getArtist(id);
