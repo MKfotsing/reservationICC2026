@@ -3,7 +3,6 @@ package be.iccbxl.pid.reservations_springboot.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,8 +15,11 @@ import be.iccbxl.pid.reservations_springboot.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 	
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
