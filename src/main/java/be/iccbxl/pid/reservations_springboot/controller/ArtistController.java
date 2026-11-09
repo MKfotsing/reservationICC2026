@@ -3,6 +3,7 @@ package be.iccbxl.pid.reservations_springboot.controller;
 import java.util.List;
 
 //import org.springframework.beans.BeanUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +49,7 @@ public class ArtistController {
         return "artist/show";
     }
 	
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/artists/{id}/edit")
 	public String edit(Model model, @PathVariable long id, HttpServletRequest request) {
 		Artist artist = service.getArtist(id);
@@ -66,6 +68,7 @@ public class ArtistController {
 		return "artist/edit";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
 	@PutMapping("/artists/{id}/edit")
 		public String update(@Valid @ModelAttribute Artist artist, BindingResult bindingResult,
 		@PathVariable long id, Model model, RedirectAttributes redirAttrs) 
