@@ -1,5 +1,6 @@
 package be.iccbxl.pid.reservations_springboot.dto;
 
+import be.iccbxl.pid.reservations_springboot.validation.PasswordConfirmation;
 import be.iccbxl.pid.reservations_springboot.validation.PasswordMatches;
 import be.iccbxl.pid.reservations_springboot.validation.StrongPassword;
 import jakarta.validation.constraints.Email;
@@ -9,7 +10,7 @@ import lombok.Data;
 
 @Data
 @PasswordMatches  // annotation personnalisée
-public class UserRegistrationDto {
+public class UserRegistrationDto implements PasswordConfirmation {
     @NotBlank(message = "Le prénom est obligatoire")
     private String firstname;
 

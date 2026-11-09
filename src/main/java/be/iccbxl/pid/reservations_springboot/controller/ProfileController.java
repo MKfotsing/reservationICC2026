@@ -68,6 +68,10 @@ public class ProfileController {
             @Valid @ModelAttribute("user") UserProfileDto dto,
             BindingResult result, Model model, RedirectAttributes redirAttrs) {
 
+        // Le champ caché "id" est modifiable côté navigateur : seul l'utilisateur connecté fait foi
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        dto.setId(userRepository.findByLogin(login).getId());
+
         if (result.hasErrors()) {
             model.addAttribute("errorMessage", "Erreurs de validation !");
             return "authentication/profile";

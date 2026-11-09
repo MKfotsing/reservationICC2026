@@ -1,5 +1,6 @@
 package be.iccbxl.pid.reservations_springboot.dto;
 
+import be.iccbxl.pid.reservations_springboot.validation.PasswordConfirmation;
 import be.iccbxl.pid.reservations_springboot.validation.PasswordMatches;
 import be.iccbxl.pid.reservations_springboot.validation.StrongPassword;
 import jakarta.validation.constraints.Email;
@@ -9,7 +10,7 @@ import lombok.Data;
 
 @Data
 @PasswordMatches(message = "Les mots de passe ne correspondent pas")
-public class UserProfileDto {
+public class UserProfileDto implements PasswordConfirmation {
 
     private Long id;
 
