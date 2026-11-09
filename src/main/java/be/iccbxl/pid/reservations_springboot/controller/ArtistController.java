@@ -87,7 +87,13 @@ public class ArtistController {
 		return "redirect:/artists/"+artist.getId();
 	}
 	@GetMapping("/artists/create")
-	public String create(Model model) {
+	public String create(Model model, HttpServletRequest request, RedirectAttributes redirAttrs) {
+	    // Mauvaise approche (volontaire) : le rôle est testé à la main dans chaque méthode
+	    if (!request.isUserInRole("ADMIN")) {
+	        redirAttrs.addFlashAttribute("errorMessage", "Vous n'avez pas le droit de créer un artiste.");
+	        return "redirect:/";
+	    }
+
 	    if (!model.containsAttribute("artist")) {
 	        model.addAttribute("artist", new Artist());
     }
@@ -97,8 +103,13 @@ public class ArtistController {
 
 	
 	@PostMapping("/artists/create")
-	public String store(@Valid @ModelAttribute Artist artist, BindingResult bindingResult, 
+	public String store(@Valid @ModelAttribute Artist artist, BindingResult bindingResult, HttpServletRequest request, 
 		Model model, RedirectAttributes redirAttrs) {
+
+	    if (!request.isUserInRole("ADMIN")) {
+	        redirAttrs.addFlashAttribute("errorMessage", "Vous n'avez pas le droit de créer un artiste.");
+	        return "redirect:/";
+	    }
 
 	    
 	    if (bindingResult.hasErrors()) {
