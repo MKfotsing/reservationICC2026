@@ -1,4 +1,5 @@
-CREATE TABLE `artists` (
+-- IF NOT EXISTS : sans effet sur les bases où la table a été créée avant cette migration
+CREATE TABLE IF NOT EXISTS `artists` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
   `lastname` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
